@@ -4,14 +4,12 @@
 #define BMS_ID 4
 #define MC_ID 5
 
-#define PERIPH_SENSOR_COUNT 0
-#define PERIPH_SENSOR_THRESHOLD 0.1
-#define PERIPH_SENSOR_DELAY 100
+#define LEFT_PROJECTOR_LAMP 3;
+#define RIGHT_PROJECTOR_LAMP 5;
+#define LEFT_TURN_SIGNAL_FRONT 6;
+#define RIGHT_TURN_SIGNAL_FRONT 9;
+#define LEFT_TURN_SIGNAL_BACK 10;
+#define RIGHT_TURN_SIGNAL_BACK 11;
 
-typedef struct sensor_s {
-  unsigned char (*read)();
-  char *name;
-} sensor;
-
-boolean debug = false;
-boolean sendData = true;
+#define SENSOR_1 A0;
+#define SENSOR_1_THRESH 10;

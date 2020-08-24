@@ -1,44 +1,42 @@
 #include <CAN.h>
 #include <LV.h>
 
+unsigned char sensor_1_val = 0;
+
 void setup() {
+  pinMode(SENSOR_1, INPUT);
+
   Serial.begin(9600);
   while (!Serial);
 
-  Serial.println("CAN Sender");
+  if(debug){
+    Serial.begin(9600);
+    while (!Serial);
 
-  // start the CAN bus at 500 kbps
-  if (!CAN.begin(500E3)) {
-    if(debug)
-      Serial.println("Starting CAN failed!");
-    while (1);
-  }
+    // start the CAN bus at 500 kbps
+    if (!CAN.begin(500E3)) {
+      if(debug)
+        Serial.println("Starting CAN failed!");
+      while (1);
+    }
+
+  // register the receive callback
+  CAN.onReceive(onReceive);
 }
 
 void loop() {
-  static unsigned char sensorValues[PERIPH_SENSOR_COUNT];
-  static sensor sensors[PERIPH_SENSOR_COUNT] = {0};
-
-  if(debug)
-    Serial.print("Sending packet ... ");
+  unsigned char current_sensor_1_val = analogRead(SENSOR_1) >> 2;
   
-  readSensor(sensorValues, PERIPH_SENSOR_COUNT, sensors)
-  
-  if(sendData){
+  if(current_sensor_1_val - sensor_1_val > SENSOR_1_THRESH){
     CAN.beginPacket(PERIPH_ID);
-    CAN.write(sensorValues, PERIPH_SENSOR_COUNT);
+    CAN.write(current_sensor_1_val, 1);
     CAN.endPacket();
+    sensor_1_val = current_sensor_1_val
   }
 
-  delay(PERIPH_SENSOR_DELAY);
+  delay(100);
 }
 
-void readSensor(unsigned char *sensorValues, unsigned char sensorCount, sensor *sensors){
-  
-  for(int i = 0; i < sensorCount, i++){
-    if((((float)sensorValues[i]) - ((float)sensors[i].read()))/((float)sensorValues[i]) > PERIPH_SENSOR_THRESHOLD){
-      sendData = true;
-      sensorValues[i] = sensors[i].read();
-    }
-  }
+void onReceive(int packetSize) {
+  // Arbitrary, doesnt do anything for now.
 }

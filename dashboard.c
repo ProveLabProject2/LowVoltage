@@ -1,13 +1,6 @@
 #include <CAN.h>
 #include <LV.h>
 
-define LEFT_PROJECTOR_LAMP 3;
-define RIGHT_PROJECTOR_LAMP 5;
-define LEFT_TURN_SIGNAL_FRONT 6;
-define RIGHT_TURN_SIGNAL_FRONT 9;
-define LEFT_TURN_SIGNAL_BACK 10;
-define RIGHT_TURN_SIGNAL_BACK 11;
-
 void setup() {
   pinMode(LEFT_PROJECTOR_LAMP, OUTPUT);
   pinMode(RIGHT_PROJECTOR_LAMP, OUTPUT);
@@ -62,13 +55,13 @@ void loop() {
 
 void onReceive(int packetSize) {
   long recvID = CAN.packetId();
-  char data[100];
+  char data[100] = {0};
   
-  int i = 0;
+  int packetSize = 0;
   
   while (CAN.available()) {
       data[i] = CAN.read();
-      i += 1;
+      packetSize += 1;
   }
   
   if(debug){
@@ -89,6 +82,6 @@ void onReceive(int packetSize) {
     for(i = 0; i < packetSize; i++){
       Serial.print("%c", data[i]);
     }
-    System.println();
+    Serial.println();
   }
 }
