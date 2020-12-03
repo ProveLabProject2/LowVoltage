@@ -4,11 +4,9 @@
 
 
 void setup() {
-  pinMode(IGNITION_IN, INPUT);
   pinMode(DIRECTION_IN, INPUT);
   pinMode(TEMPERATURE, INPUT)
   
-  pinMode(IGNITION_OUT, OUTPUT);
   pinMode(DIRECTION_OUT, OUTPUT);
   pinMode(BRAKE, OUTPUT);
   pinMode(ACCELERATOR, OUTPUT);
@@ -32,19 +30,13 @@ void setup() {
 }
 
 void loop() {
-  bool ignition = analogRead(IGNITION_IN);
-  
-  if(ignition){
-    analogWrite(IGNITION_OUT, ignition);
-	delay(100);
+  //doesn't write just receives and translates
   }
 }
 
 void onReceive(int packetSize) {
   Serial.print("Received ");
-  
-  if(ignition){
-  	if (CAN.packetID() == MCU_ID){
+  	if (CAN.packetID() == MC_ID){
   		unsigned char out = (char)CAN.read();
   		
   		if(out == 0x00){
@@ -55,8 +47,4 @@ void onReceive(int packetSize) {
   		  analogWrite(ACCELERATOR, out);
   		}
   	}
-  }
-  else {
-    Serial.print("Ignition Off");
-  }
 }
