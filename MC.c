@@ -1,7 +1,10 @@
 
 #include <CAN.h>
 #include <LV.h>
+#include <Adafruit_MCP4725.h>
 
+
+Adafruit_MCP4725 dacBoard;
 
 void setup() {
   pinMode(DIRECTION_IN, INPUT);
@@ -24,6 +27,9 @@ void setup() {
         Serial.println("Starting CAN failed!");
       while (1);
     }
+    
+  //begin DAC
+  dacBoard.begin();
 
   // register the receive callback
   CAN.onReceive(onReceive);
@@ -37,14 +43,14 @@ void loop() {
 void onReceive(int packetSize) {
   Serial.print("Received ");
   	if (CAN.packetID() == MC_ID){
-  		unsigned char out = (char)CAN.read();
+  		unsigned char pedalType = (char)CAN.read();
+      unsigned char outByte = (char)CAN.read();
   		
-  		if(out == 0x00){
-  		  digitalWrite(BRAKE, 0);
-  		} else if(out == 0x01){
-  		  digitalWrite(BRAKE, 0);
-  		} else{
-  		  analogWrite(ACCELERATOR, out);
+  		if(pedalType == 0x00){
+  		  digitalWrite(BRAKE, outByte);
+  		} else 
+        outByte = outByte * 16;
+        dacBoard.setVoltage(outByte);
   		}
   	}
 }
