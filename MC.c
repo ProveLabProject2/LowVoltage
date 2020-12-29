@@ -2,6 +2,7 @@
 #include <CAN.h>
 #include <LV.h>
 #include <Adafruit_MCP4725.h>
+#include <Wire.h>
 
 
 Adafruit_MCP4725 dacBoard;
@@ -27,10 +28,12 @@ void setup() {
         Serial.println("Starting CAN failed!");
       while (1);
     }
+  //begin I2C
+  Wire.begin();
     
   //begin DAC
   dacBoard.begin();
-
+    
   // register the receive callback
   CAN.onReceive(onReceive);
 }
