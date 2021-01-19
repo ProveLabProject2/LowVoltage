@@ -1,5 +1,11 @@
 #include <CAN.h>
 #include <LV.h>
+#include <ArduinoJson.h>
+//temporary globals, will be replaced by batteryTemp etc.
+//globals necessary so that the json is not fully reset on new data
+int xValue;
+int yValue;
+int zValue;
 
 void setup() {
   pinMode(LEFT_PROJECTOR_LAMP, OUTPUT);
@@ -8,18 +14,6 @@ void setup() {
   pinMode(RIGHT_TURN_SIGNAL_FRONT, OUTPUT);
   pinMode(LEFT_TURN_SIGNAL_BACK, OUTPUT);
   pinMode(RIGHT_TURN_SIGNAL_BACK, OUTPUT);
-
-  if(debug){
-    Serial.begin(9600);
-    while (!Serial);
-
-    // start the CAN bus at 500 kbps
-    if (!CAN.begin(500E3)) {
-      if(debug)
-        Serial.println("Starting CAN failed!");
-      while (1);
-    }
-
   // register the receive callback
   CAN.onReceive(onReceive);
 }
@@ -53,18 +47,51 @@ void loop() {
   }
 }
 
+void jsonWrite(){
+  const size_t capacity = JSON_OBJECT_SIZE(3);
+  DynamicJsonDocument doc(capacity);
+  doc['X'] = xValue;
+  doc['Y'] = yValue;
+  doc['Z'] = zValue;
+  //delay statement might be needed
+  serializeJson(doc, Serial);
+}
+
 void onReceive(int packetSize) {
   long recvID = CAN.packetId();
-  char data[100] = {0};
-  
+  char data[3] = {0};
   int packetSize = 0;
   
   while (CAN.available()) {
-      data[i] = CAN.read();
+      data[packetSize] = CAN.read();
       packetSize += 1;
   }
+  //initializes vairables that become JSON values
+  int id = data[0];
+  int metricID = data[1]
+  if (id = MCU_ID){
+    //data comes from MCU
+    if(metricID = 1){
+      //metric is X metric
+      xValue = data[2]
+      //sets the JSON value for X metric to the new data
+    }
+    //Continue adding if statements here until all metrics completed
+  }
+  else if (id = PERIPH_ID){
+    if(metricID = 1){
+      yValue = data[2]
+    }
+  }
+  else if (data[0] = BMS_ID){
+    if(data[1] = 1){
+      zValue = data[2]
+    }
+  }
+  jsonWrite()
+  //continue adding until all boards accounted for
   
-  if(debug){
+  /*if(debug){
     Serial.print("Received ");
     if (CAN.packetExtended()) {
       Serial.print("extended ");
@@ -85,3 +112,4 @@ void onReceive(int packetSize) {
     Serial.println();
   }
 }
+*/
