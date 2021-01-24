@@ -25,12 +25,12 @@ void setup() {
 }*/
 
 void loop() {
-  const uint8_t current_sensor_1_val = analogRead(SENSOR_1) >> 2;
+  uint8_t current_sensor_1_val = analogRead(SENSOR_1) >> 2;
   
   
   if(current_sensor_1_val - sensor_1_val > SENSOR_1_THRESH){
     CAN.beginPacket(PERIPH_ID);
-    CAN.write(current_sensor_1_val, 1);
+    CAN.write(&current_sensor_1_val, 1);
     CAN.endPacket();
     sensor_1_val = current_sensor_1_val;
   }
