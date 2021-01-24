@@ -1,5 +1,5 @@
 #include <CAN.h>
-#include <LV.h>
+#include "LV.h"
 #include <ArduinoJson.h>
 //temporary globals, will be replaced by batteryTemp etc.
 //globals necessary so that the json is not fully reset on new data
@@ -41,8 +41,9 @@ void loop() {
         pinMode(LEFT_TURN_SIGNAL_BACK, value);
       case 5:
         pinMode(RIGHT_TURN_SIGNAL_BACK, value);
-      case default:
-        continue;
+      default:
+        //do nothing
+        break;
     }
   }
 }
@@ -60,7 +61,6 @@ void jsonWrite(){
 void onReceive(int packetSize) {
   long recvID = CAN.packetId();
   char data[3] = {0};
-  int packetSize = 0;
   
   while (CAN.available()) {
       data[packetSize] = CAN.read();
@@ -68,27 +68,27 @@ void onReceive(int packetSize) {
   }
   //initializes vairables that become JSON values
   int id = data[0];
-  int metricID = data[1]
-  if (id = MCU_ID){
+  int metricID = data[1];
+  if (id == MCU_ID){
     //data comes from MCU
-    if(metricID = 1){
+    if(metricID == 1){
       //metric is X metric
-      xValue = data[2]
+      xValue = data[2];
       //sets the JSON value for X metric to the new data
     }
     //Continue adding if statements here until all metrics completed
   }
-  else if (id = PERIPH_ID){
-    if(metricID = 1){
-      yValue = data[2]
+  else if (id == PERIPH_ID){
+    if(metricID == 1){
+      yValue = data[2];
     }
   }
-  else if (data[0] = BMS_ID){
+  else if (data[0] == BMS_ID){
     if(data[1] = 1){
-      zValue = data[2]
+      zValue = data[2];
     }
   }
-  jsonWrite()
+  jsonWrite();
 }
   //continue adding until all boards accounted for
   
