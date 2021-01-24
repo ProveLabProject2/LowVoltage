@@ -1,5 +1,5 @@
 #include <CAN.h>
-#include <LV.h>
+#include "LV.h"
 
 unsigned char sensor_1_val = 0;
 
@@ -8,8 +8,8 @@ void setup() {
 
   Serial.begin(9600);
   while (!Serial);
-
-  if(debug){
+}
+ /*if(debug){
     Serial.begin(9600);
     while (!Serial);
 
@@ -22,16 +22,17 @@ void setup() {
 
   // register the receive callback
   CAN.onReceive(onReceive);
-}
+}*/
 
 void loop() {
-  unsigned char current_sensor_1_val = analogRead(SENSOR_1) >> 2;
+  const uint8_t current_sensor_1_val = analogRead(SENSOR_1) >> 2;
+  
   
   if(current_sensor_1_val - sensor_1_val > SENSOR_1_THRESH){
     CAN.beginPacket(PERIPH_ID);
     CAN.write(current_sensor_1_val, 1);
     CAN.endPacket();
-    sensor_1_val = current_sensor_1_val
+    sensor_1_val = current_sensor_1_val;
   }
 
   delay(100);
