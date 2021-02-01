@@ -3,9 +3,13 @@
 #include <ArduinoJson.h>
 //temporary globals, will be replaced by batteryTemp etc.
 //globals necessary so that the json is not fully reset on new data
-int xValue;
-int yValue;
-int zValue;
+int brake;
+int accel;
+int hlight;
+int leftturn;
+int rightturn;
+int bmsValue;
+int mcValue;
 
 void setup() {
   pinMode(LEFT_PROJECTOR_LAMP, OUTPUT);
@@ -49,11 +53,15 @@ void loop() {
 }
 
 void jsonWrite(){
-  const size_t capacity = JSON_OBJECT_SIZE(3);
+  const size_t capacity = JSON_OBJECT_SIZE(7);
   DynamicJsonDocument doc(capacity);
-  doc['X'] = xValue;
-  doc['Y'] = yValue;
-  doc['Z'] = zValue;
+  doc["Brakes"] = brake;
+  doc["Accelerator"] = accel;
+  doc["Head Light"] = hlight;
+  doc["Left Turn Signal"] = leftturn;
+  doc["Right Turn Signal"] = rightturn;
+  doc["BMS"] = bmsValue;
+  doc["mc"] = bmsValue;
   //delay statement might be needed
   serializeJson(doc, Serial);
 }
@@ -66,31 +74,39 @@ void onReceive(int packetSize) {
       data[packetSize] = CAN.read();
       packetSize += 1;
   }
-  //initializes vairables that become JSON values
-  int id = data[0];
   int metricID = data[1];
-  if (id == MCU_ID){
-    //data comes from MCU
-    if(metricID == 1){
-      //metric is X metric
-      xValue = data[2];
-      //sets the JSON value for X metric to the new data
+  if (CAN.packetId == MCU_ID){
+    //Brakes
+    if(metricID == 0){
+      brake = data[1];
     }
-    //Continue adding if statements here until all metrics completed
-  }
-  else if (id == PERIPH_ID){
-    if(metricID == 1){
-      yValue = data[2];
+    //Accelerator
+    else if(metricID == 1){
+      accel = data[1];
     }
   }
-  else if (data[0] == BMS_ID){
-    if(data[1] = 1){
-      zValue = data[2];
+  else if (CAN.packetId == DASH_ID){
+    if(metricID == 0){
+      hlight = data[1];
+    }
+    else if(metricID == 1){
+      leftturn = data[1];
+    }
+    else if(metricID == 2){
+      rightturn = data[1];
+    }
+  }
+  else if (CAN.packetId == BMS_ID){
+    if(data[0] = 0){
+      bmsValue = data[1]
+    }
+  else if (CAN.packetId == MC_ID){
+    if(data[0] = 0){
+      mcValue = data[1]
     }
   }
   jsonWrite();
 }
-  //continue adding until all boards accounted for
   
   /*if(debug){
     Serial.print("Received ");

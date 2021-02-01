@@ -1,8 +1,11 @@
-#define TABLET_ID 1
-#define MCU_ID 2
-#define PERIPH_ID 3
-#define BMS_ID 4
-#define MC_ID 5
+#define DASH_ID 0;
+#define TABLET_ID 1;
+#define MCU_ID 2;
+#define PERIPH_ID 3;
+#define BMS_ID 4;
+#define MC_ID 5;
+#define MC2_ID 6;
+#define TELE_ID 7;
 
 #define LEFT_PROJECTOR_LAMP 3
 #define RIGHT_PROJECTOR_LAMP 5
