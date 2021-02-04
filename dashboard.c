@@ -61,7 +61,7 @@ void jsonWrite(){
   doc["Left Turn Signal"] = leftturn;
   doc["Right Turn Signal"] = rightturn;
   doc["BMS"] = bmsValue;
-  doc["mc"] = bmsValue;
+  doc["MC"] = mcValue;
   //delay statement might be needed
   serializeJson(doc, Serial);
 }
