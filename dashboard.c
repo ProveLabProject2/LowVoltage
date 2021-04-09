@@ -23,31 +23,34 @@ void setup() {
 }
 
 void loop() {
-  unsigned char incomingByte = 0;
-  unsigned char light = 0;
-  unsigned char value = 0;
+  char incomingByte[1];
 
   // Receive light control byte. Value has 5 bit resolution
   if (Serial.available()){
-    incomingByte = Serial.read();
-    light = incomingByte >> 5;
-    value = (incomingByte << 3) >> 3;
-    switch(light){
-      case 0:
-        pinMode(LEFT_PROJECTOR_LAMP, value);
-      case 1:
-        pinMode(RIGHT_PROJECTOR_LAMP, value);
-      case 2:
-        pinMode(LEFT_TURN_SIGNAL_FRONT, value);
-      case 3:
-        pinMode(RIGHT_TURN_SIGNAL_FRONT, value);
-      case 4:
-        pinMode(LEFT_TURN_SIGNAL_BACK, value);
-      case 5:
-        pinMode(RIGHT_TURN_SIGNAL_BACK, value);
-      default:
-        //do nothing
-        break;
+    incomingByte = Serial.readString();
+    if(incomingByte == "L"){
+      digitalWrite(LEFT_TURN_SIGNAL_FRONT, HIGH)
+      digitalWrite(LEFT_TURN_SIGNAL_BACK, HIGH)
+    }
+    if(incomingByte == "l"){
+      digitalWrite(LEFT_TURN_SIGNAL_FRONT, LOW)
+      digitalWrite(LEFT_TURN_SIGNAL_BACK, LOW)
+    }
+    if(incomingByte == "R"){
+      digitalWrite(RIGHT_TURN_SIGNAL_FRONT, HIGH)
+      digitalWrite(RIGHT_TURN_SIGNAL_BACK, HIGH)
+    }
+    if(incomingByte == "r"){
+      digitalWrite(RIGHT_TURN_SIGNAL_FRONT, LOW)
+      digitalWrite(RIGHT_TURN_SIGNAL_BACK, LOW)
+    }
+    if(incomingByte == "H"){
+      digitalWrite(RIGHT_PROJECTOR_LAMP, HIGH)
+      digitalWrite(LEFT_PROJECTOR_LAMP, HIGH)
+    }
+    if(incomingByte == "h"){
+      digitalWrite(RIGHT_PROJECTOR_LAMP, LOW)
+      digitalWrite(LEFT_PROJECTOR_LAMP, LOW)
     }
   }
 }
