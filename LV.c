@@ -1,4 +1,5 @@
 #include "LV.h"
+#include <CAN.h>
 
 void sendCANOpenSDORequest(int metricCode, int canOpenID){
   uint8_t mainIndex1;
@@ -42,4 +43,26 @@ void sendCANOpenSDORequest(int metricCode, int canOpenID){
   CAN.write(canOpenRequest, 8);
   CAN.endPacket();
 }
+
+int receiveCANOpenSDOResponse(int canOpenId, uint8_t *canOpenResponse)
+{
+  if((int dataSize = CAN.parsePacket()) != 0 )
+  {
+    long id = CAN.packetId();
+    
+    if(((12<<7) + canOpenId) == id)
+    {
+      for(int i = 0; i < dataSize; i++)
+      {
+        canOpenResponse[i] = Can.read();
+      }
+
+      return dataSize;
+    }
+
+    return 0;
+  }
+
+  return -1;
+} 
 
