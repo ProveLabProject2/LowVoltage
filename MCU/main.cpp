@@ -1,32 +1,33 @@
 
 #include "mbed.h"
 #include "LV.h"
-DigitalOut l_projector_lamp (p26);
-DigitalOut r_projector_lamp (p25);
-DigitalOut r_dtr (p24);
-DigitalOut l_dtr (p19);
-DigitalOut r_tail (p23);
-DigitalOut l_tail (p20);
-DigitalOut r_turnsignal (p21);
-DigitalOut l_turnsignal (p22);
 
-InteruptIn brake (p17);
-AnalogIn accelerator (p18);
+DigitalOut l_projector_lamp (LEFT_PROJECTOR_PIN);
+DigitalOut r_projector_lamp (RIGHT_PROJECTOR_PIN);
+DigitalOut r_dtr (RIGHT_DTR_PIN);
+DigitalOut l_dtr (LEFT_DTR_PIN);
+DigitalOut r_tail (RIGHT_TAIL_PIN);
+DigitalOut l_tail (LEFT_TAIL_PIN);
+DigitalOut r_turnsignal (RIGHT_TURN_PIN);
+DigitalOut l_turnsignal (LEFT_TURN_PIN);
 
-CAN can1 (p30, p29);
+InteruptIn brake (BRAKE_PIN);
+AnalogIn accelerator (ACCELERATOR_PIN);
+
+CAN can1 (CAN_RD, CAN_TD);
 
 Ticker accelerator_read;
 
 void brake_switch_handler_on(){
     // Dont know what this is, change to defines. Standardize a format for data being transmitted through CAN. Add defines instead of hardcoded values
-    can1.write(CANMessage(0x02,[0x01], 1));
+    can1.write(CANMessage(BRAKE_ID,[BRAKE_ON], 1));
     r_tail = 1;
     l_tail = 1;
 }
 
 void brake_switch_handler_off(){
     // Dont know what this is, change to defines. Standardize a format for data being transmitted through CAN. Add defines instead of hardcoded values
-    can1.write(CANMessage(0x02,[0x00], 1));
+    can1.write(CANMessage(BRAKE_ID,[BRAKE_OFF], 1));
     r_tail = 0;
     l_tail = 0;
 }
@@ -43,7 +44,8 @@ int main() {
     brake.fall(&brake_switch_handler_off);
 
     accelerator_read.attach(&accelerator_time_handler, 0.1);
-    // Probably have to add a empty while loop here
+
+    while();
 }
 
 
