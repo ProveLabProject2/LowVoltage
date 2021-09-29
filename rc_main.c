@@ -96,11 +96,7 @@ int Bootup(int id, int timeout){
       Serial.print("MC^2 = Offline");
       return 0;
     }
-    //This should never happen
-    return -1;
   }
-}
-
-  
-  return bootup;
+  //This should never happen
+  return -1;
 }
