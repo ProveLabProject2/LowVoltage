@@ -6,10 +6,7 @@ void setup() {
   //Bit rate = 500Kbps
   CAN.begin(500E3);
 
-  int startup = 0;
-  if (startup == 0){
-    Bootup();
-  }
+  Bootup();
 }
 
 void loop() {
