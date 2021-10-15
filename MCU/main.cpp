@@ -14,9 +14,28 @@ DigitalOut l_turnsignal (LEFT_TURN_PIN);
 InteruptIn brake (BRAKE_PIN);
 AnalogIn accelerator (ACCELERATOR_PIN);
 
-CAN can1 (CAN_RD, CAN_TD);
+CAN.begin(500E3);
 
 Ticker accelerator_read;
+bool setup = true;
+
+bool heartbeat(int id){
+  int packetSize = 0;
+  while(packetSize == 0){
+    packetSize = CAN.parsePacket();
+
+    if(packetSize){
+      if(CAN.packetId() == id + 99){
+        CAN.beginPacket(id + 98);
+        CAN.endPacket();
+
+        packetSize = 0;
+        return false;
+      }
+    }
+  }
+}
+
 
 void brake_switch_handler_on(){
     // Dont know what this is, change to defines. Standardize a format for data being transmitted through CAN. Add defines instead of hardcoded values
@@ -40,6 +59,9 @@ void accelerator_time_handler(){
 }
  
 int main() {
+    while(setup){
+        setup = heartbeat(MCU_ID);
+    }
     brake.rise(&brake_switch_handler_on);
     brake.fall(&brake_switch_handler_off);
 

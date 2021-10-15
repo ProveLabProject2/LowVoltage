@@ -7,6 +7,10 @@
 #define MC2_ID 6;
 #define TELE_ID 7;*/
 
+#define MCU_ID 100
+#define MC2_ID 200
+#define RC_HEAD 300
+
 #define BRAKE_ID 1
 #define ACCEL_ID 2
 #define RIGHT_TURN_ID 3

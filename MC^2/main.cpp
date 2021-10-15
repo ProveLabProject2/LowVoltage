@@ -9,38 +9,45 @@ Adafruit_MCP4725 dacBoard;
 
 void setup() {
   pinMode(DIRECTION_IN, INPUT);
-  pinMode(TEMPERATURE, INPUT)
+  pinMode(TEMPERATURE, INPUT);
   
   pinMode(DIRECTION_OUT, OUTPUT);
   pinMode(BRAKE, OUTPUT);
   pinMode(ACCELERATOR, OUTPUT);
-  
-  Serial.begin(9600);
-  while (!Serial);
+  bool startUp = false;
+  //add heartbeat.  
 
-  if(debug){
-    Serial.begin(9600);
-    while (!Serial);
-
-    // start the CAN bus at 500 kbps
-    if (!CAN.begin(500E3)) {
-      if(debug)
-        Serial.println("Starting CAN failed!");
-      while (1);
-    }
   //begin I2C
   Wire.begin();
     
   //begin DAC
   dacBoard.begin();
     
-  // register the receive callback
+  heartbeat(MC2_ID);z
+
+   // register the receive callback
   CAN.onReceive(onReceive);
+}
+
+bool heartbeat(int id){
+  int packetSize = 0;
+  while(packetSize == 0){
+    packetSize = CAN.parsePacket();
+
+    if(packetSize){
+      if(CAN.packetId() == id + 99){
+        CAN.beginPacket(id + 98);
+        CAN.endPacket();
+
+        packetSize = 0;
+        return false;
+      }
+    }
+  }
 }
 
 void loop() {
   //doesn't write just receives and translates
-  }
 }
 
 void onReceive(int packetSize) {
@@ -51,7 +58,7 @@ void onReceive(int packetSize) {
   		
   		if(pedalType == 0x00){
   		  digitalWrite(BRAKE, outByte);
-  		} else 
+  		} else {
         outByte = outByte * 16;
         dacBoard.setVoltage(outByte);
   		}

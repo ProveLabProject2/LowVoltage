@@ -1,4 +1,5 @@
 #include <CAN.h>
+#include <LiquidCrystal.h>
 
 
 void setup() {
@@ -9,6 +10,11 @@ void setup() {
 
   int startup = 0;
   int bootup = 0;
+
+  //initialize the library with the numbers of the interface pins (CHECK TINKER CAD)
+  LiquidCrystal lcd(12, 11, 9, 8, 6, 4);
+  lcd.begin(16, 2);
+
   
   //Have user start bootup check using Serial Monitor
   while(startup == 0){
@@ -18,23 +24,35 @@ void setup() {
     char reply = Serial.read();
 
     if(reply == 'Y'){
-      Serial.println("Running Bootup");
+      lcd.clear();
+      lcd.print("Running Bootup");
 
       bootup += Bootup(100, 500);
+      if (bootup == 1){
+        lcd.clear();
+        lcd.print("BOARD NAME: Success");}
+      else{
+        lcd.clear();
+        lcd.print("BOARD NAME: Failure");
+      }
+
       bootup += Bootup(200, 500);
       
       if (bootup == 2){
         //recieved all return packets
-        Serial.println("Bootup Complete");
+        lcd.clear();
+        lcd.print("Bootup Complete");
         startup = 1;
       }
       else{
-        Serial.print("Bootup Failure. Check system and run again.");
+        lcd.clear();
+        lcd.print("Bootup Failure. Check system and run again.");
       }
       
     }
     else{
-      Serial.println("Please type 'Y' to run Bootup");
+      lcd.clear();
+      lcd.print("Please type 'Y' to run Bootup");
     }
     
   }
