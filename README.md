@@ -8,6 +8,6 @@ Listed below is a description of the functionality of each file.
 
 ## LV.c ##
 
-## MCU.c ##
+## mcu.c ##
 
-## MC2.c ##
+## MC.c ##
