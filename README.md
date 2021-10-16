@@ -32,13 +32,13 @@ The setup function works as follows:
 ## LV.h
 LV.h contains all our globally defined variables such as identifiers for boards and lights.
 ## LV.c
-Placeholder Description
+LV.c contains methods used to format CAN messages to CANOpen protocol.
 ## MC.c
-Placeholder Description
+MC.c contains all code for the MC^2 board. The MC^2 board will take in 2 switches from the Dash interaction(ignition, forward/neutral/reverse) as well as CAN data from the MCU regarding pedal and brake sensors. It outputs directly to the motor controller after translating the inputs into readable packets. Right now it directly outputs via a DAC board, but will eventually transition to DS402 protocol.
 ## dashboard.c
-Placeholder Description
+Dashboard.c will not be used on the rolling chassis, but translates CAN data into parsable data for the tablet. Will be adjusted based on testing at the RC stage.
 ## mcu.c
-Placeholder Description
+MCU.c takes in the pedal positions and sends them over CAN, as well as turning on headlights and taillights eventually. It is constantly reading the acceleration until interrupted by the brake. When cruise control is added, cruise control will take priority over acceleration, but the brake will maintain interrupt status. 
 ## peripheral.c
-Placeholder Description
+Peripheral acts as a dummy template for any additionally added sensors. The BMS, for example will use a similar set up with the necessary added methods to communicate over CAN with the rest of the system.
 
