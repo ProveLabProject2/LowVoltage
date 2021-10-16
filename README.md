@@ -30,7 +30,7 @@ The setup function works as follows:
 - otherwise we retry until hitting the timeout counter, and return 0
 
 ## LV.h
-Description Placeholder
+LV.h contains all our globally defined variables such as identifiers for boards and lights.
 ## LV.c
 Placeholder Description
 ## MC.c
