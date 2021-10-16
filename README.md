@@ -39,6 +39,10 @@ MC.c contains all code for the MC^2 board. The MC^2 board will take in 2 switche
 Dashboard.c will not be used on the rolling chassis, but translates CAN data into parsable data for the tablet. Will be adjusted based on testing at the RC stage.
 ## mcu.c
 MCU.c takes in the pedal positions and sends them over CAN, as well as turning on headlights and taillights eventually. It is constantly reading the acceleration until interrupted by the brake. When cruise control is added, cruise control will take priority over acceleration, but the brake will maintain interrupt status. 
+## rc_main.c
+rc_main.c is the main interaction point of the Rolling Chassis. It runs heartbeat system and is contantly printing CAN data to the LCD display.
 ## peripheral.c
 Peripheral acts as a dummy template for any additionally added sensors. The BMS, for example will use a similar set up with the necessary added methods to communicate over CAN with the rest of the system.
+## node_generic.c
+node_generic.c is a genric node for the heartbeat testing, if a CAN node is added that needs to be checked in the heartbeat, for example, the BMS again, it will use this code.
 
