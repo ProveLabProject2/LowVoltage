@@ -13,5 +13,6 @@
 #define LEFT_PROJECTOR_PIN p26
 #define CAN_TD p29
 #define CAN_RD p30
+#define CRUISECONTROL_PIN p16
 
 #endif
