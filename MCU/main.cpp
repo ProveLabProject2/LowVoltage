@@ -12,12 +12,14 @@ DigitalOut r_turnsignal (RIGHT_TURN_PIN);
 DigitalOut l_turnsignal (LEFT_TURN_PIN);
 
 InteruptIn brake (BRAKE_PIN);
+InteruptIn cruise_control (CRUISECONTROL_PIN);
 AnalogIn accelerator (ACCELERATOR_PIN);
 
 CAN.begin(500E3);
 
 Ticker accelerator_read;
 bool setup = true;
+bool cruise_control = false;
 
 bool heartbeat(int id){
   int packetSize = 0;
@@ -42,6 +44,7 @@ void brake_switch_handler_on(){
     can1.write(CANMessage(BRAKE_ID,[BRAKE_ON], 1));
     r_tail = 1;
     l_tail = 1;
+    cruise_control = false;
 }
 
 void brake_switch_handler_off(){
@@ -53,7 +56,10 @@ void brake_switch_handler_off(){
 
 void accelerator_time_handler(){
     // Might have to typecase from float to char
-    char accelerator_value = accelerator.read()*255;
+    if cruise_control == true;
+      char accelerator_value = 35*255;
+    else
+      char accelerator_value = accelerator.read()*255;
     // Add defines and change to standard can msg format
     can1.write(CANMessage(0x02, &accelerator_value, 1));
 }
