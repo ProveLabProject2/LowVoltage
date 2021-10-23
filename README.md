@@ -16,6 +16,7 @@ The setup function works as follows:
 - If all boards are ok, end the setup loop: START THE CAR
 - Else: tells the user to check the systems and requires them to hit start again. 
 - TODO: Add a timeout so the failure warning prints for longer instead of being immediatly overwritten. 
+- Set cruise control off.
 ### Bootup()
 - Params:
   - id: int in increments of 100 representing the different external boards
