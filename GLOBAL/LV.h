@@ -3,13 +3,14 @@
 #define MCU_ID 2;
 #define PERIPH_ID 3;
 #define BMS_ID 4;
-#define MC_ID 5;
+
 #define MC2_ID 6;
 #define TELE_ID 7;*/
 
 #define MCU_ID 100
 #define MC2_ID 200
 #define RC_HEAD 300
+#define MC_ID 5; //temp, just to get mc^2 to compile
 
 #define BRAKE_ID 1
 #define ACCEL_ID 2
