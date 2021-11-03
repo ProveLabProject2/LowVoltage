@@ -1,5 +1,6 @@
 #include <CAN.h>
 #include <LiquidCrystal.h>
+#include <LV.h>
 
 
 void setup() {
@@ -28,17 +29,17 @@ void setup() {
       lcd.clear();
       lcd.print("Running Bootup, DO NOT IGNITION");
 
-      bootup += Bootup(100, 500);
+      bootup += Bootup(MC2_ID, 500);
       if (bootup == 1){
         lcd.clear();
-        lcd.print("BOARD NAME: Success");}
+        lcd.print("MC2: Success");}
       else{
         lcd.clear();
-        lcd.print("BOARD NAME: Failure");
+        lcd.print("MC2: Failure");
         //break
       }
 
-      bootup += Bootup(200, 500);
+      bootup += Bootup(MCU_ID, 500);
       
       if (bootup == 2){
         //recieved all return packets
@@ -54,7 +55,6 @@ void setup() {
     }
     else{
       lcd.clear();
-      lcd.print("Please type 'Y' to run Bootup");
     }
     
   }
@@ -73,7 +73,7 @@ int Bootup(int id, int timeout){
   int counter = 0;
   int packetSize = 0;
   CAN.beginPacket(id + 99);
-  CAN.write("bootup"); //this could be empty, since we will have boards reading ID 
+  CAN.write('B'); //this could be empty, since we will have boards reading ID 
   CAN.endPacket();
 
   /*
@@ -82,7 +82,6 @@ int Bootup(int id, int timeout){
   2. writes to all of can
   
   3. closes the packet
-
   Note: This is the standard practice for sending anything over can with this lib.
   */
 
