@@ -23,10 +23,8 @@ void setup() {
   //begin DAC
   dacBoard.begin();
     
-  heartbeat(MC2_ID);z
+  heartbeat(MC2_ID);
 
-   // register the receive callback
-  CAN.onReceive(onReceive);
 }
 
 bool heartbeat(int id){
@@ -47,20 +45,27 @@ bool heartbeat(int id){
 }
 
 void loop() {
-  //doesn't write just receives and translates
+  //IF Ignition pin HIGH:
+    //startUP == true;
+  // register the receive callback
+  CAN.onReceive(onReceive);
+
 }
 
 void onReceive(int packetSize) {
   Serial.print("Received ");
   	if (CAN.packetID() == MC_ID){
-  		unsigned char pedalType = (char)CAN.read();
-      unsigned char outByte = (char)CAN.read();
-  		
-  		if(pedalType == 0x00){
-  		  digitalWrite(BRAKE, outByte);
-  		} else {
-        outByte = outByte * 16;
-        dacBoard.setVoltage(outByte);
-  		}
+      if (startUp){
+    		unsigned char pedalType = (char)CAN.read();
+        unsigned char outByte = (char)CAN.read();
+    		
+    		if(pedalType == 0x00){
+    		  digitalWrite(BRAKE, outByte);
+    		} 
+        else {
+          outByte = outByte * 16;
+          dacBoard.setVoltage(outByte);
+    		}
+      }
   	}
 }

@@ -18,6 +18,7 @@ void setup() {
   
   //Have user start bootup check using Serial Monitor
   while(startup == 0){
+    //'TYPE Y' DEPRECATED JUST RUN AUTOMATICALLY ONCE POWERED
     Serial.println("Type 'Y' to run Bootup");
     while(Serial.available() == 0){
     }
@@ -25,7 +26,7 @@ void setup() {
 
     if(reply == 'Y'){
       lcd.clear();
-      lcd.print("Running Bootup");
+      lcd.print("Running Bootup, DO NOT IGNITION");
 
       bootup += Bootup(100, 500);
       if (bootup == 1){
@@ -34,6 +35,7 @@ void setup() {
       else{
         lcd.clear();
         lcd.print("BOARD NAME: Failure");
+        //break
       }
 
       bootup += Bootup(200, 500);
@@ -41,7 +43,7 @@ void setup() {
       if (bootup == 2){
         //recieved all return packets
         lcd.clear();
-        lcd.print("Bootup Complete");
+        lcd.print("Bootup Complete, Turn on IGNITION");
         startup = 1;
       }
       else{
@@ -70,7 +72,7 @@ int Bootup(int id, int timeout){
   int bootup = 0;
   int counter = 0;
   int packetSize = 0;
-  CAN.beginPacket(199);
+  CAN.beginPacket(id + 99);
   CAN.write("bootup"); //this could be empty, since we will have boards reading ID 
   CAN.endPacket();
 
@@ -100,7 +102,7 @@ int Bootup(int id, int timeout){
         X98 = Bootup return packet
         */
 
-        Serial.print("MC^2 = Online");
+        //Serial.print("MC^2 = Online");
         return 1;
       }  
     }
@@ -111,7 +113,7 @@ int Bootup(int id, int timeout){
     }
 
     if(counter >= timeout){
-      Serial.print("MC^2 = Offline");
+      //Serial.print("MC^2 = Offline");
       return 0;
     }
   }
