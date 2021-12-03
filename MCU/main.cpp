@@ -1,6 +1,7 @@
 
 #include "mbed.h"
 #include "LV.h"
+#include "mcu.h"
 
 DigitalOut l_projector_lamp (LEFT_PROJECTOR_PIN);
 DigitalOut r_projector_lamp (RIGHT_PROJECTOR_PIN);
